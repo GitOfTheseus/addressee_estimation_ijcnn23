@@ -1,4 +1,3 @@
-import time
 from datetime import datetime
 import numpy as np
 import pandas as pd
@@ -14,6 +13,7 @@ np.random.seed(0)
 
 
 def read_arguments(args):
+
     d = {
         'model': args.model,
         'data_dir': args.data_dir,
@@ -37,7 +37,6 @@ def read_arguments(args):
         'optimizer1': args.optimizer1,
         'optimizer2': args.optimizer2,
     }
-
 
     return d
 
@@ -99,16 +98,13 @@ def join_slot(model, data_dir, label_filename, slot_test, slot_folders, train_fi
     #test_csv = f'test_slot_{slot_folders[slot_test]}_out.csv'
     #csv_training = [train_csv, eval_csv]
 
-    if model == 'cnn_audio':
-        df_format = pd.read_csv(os.path.join(data_dir, slot_folders[slot_test], 'audio_sequences', label_filename),
-                                sep="\t", index_col='index')
-    else:
-        if training_complete:
+    if training_complete:
             df_format = pd.read_csv(os.path.join(data_dir, slot_folders[0], label_filename),
                                 sep="\t", index_col='index')
-        else:
+    else:
             df_format = pd.read_csv(os.path.join(data_dir, slot_folders[slot_test], label_filename),
                                 sep="\t", index_col='index')
+
     train_df = pd.DataFrame(columns=df_format.columns)
     if not training_complete:
         test_df = pd.DataFrame(columns=df_format.columns)
@@ -117,13 +113,9 @@ def join_slot(model, data_dir, label_filename, slot_test, slot_folders, train_fi
     train_list =[]
 
     for slot in slot_folders:
-        if model == 'cnn_audio':
-            slot_df = pd.read_csv(os.path.join(data_dir, slot, 'audio_sequences', label_filename), sep="\t",
-                                  index_col='index')
-        else:
-            slot_df = pd.read_csv(os.path.join(data_dir, slot, label_filename), sep="\t", index_col='index')
-            slot_df['SEQUENCE'] = slot_df['SEQUENCE'] + last_sequence + 1
-            last_sequence = slot_df['SEQUENCE'].loc[slot_df.index[-1]]
+        slot_df = pd.read_csv(os.path.join(data_dir, slot, label_filename), sep="\t", index_col='index')
+        slot_df['SEQUENCE'] = slot_df['SEQUENCE'] + last_sequence + 1
+        last_sequence = slot_df['SEQUENCE'].loc[slot_df.index[-1]]
 
         if training_complete:
             train_df = pd.concat([train_df, slot_df], ignore_index=True)
@@ -175,36 +167,20 @@ def create_eval_group(model, data_dir, train_filename, eval_filename, tot_sequen
     train_df = pd.read_csv(os.path.join(data_dir, train_filename), sep="\t", index_col='index')
     eval_df = pd.DataFrame(columns=train_df.columns)
 
-    if model == 'cnn_audio':
-        addressees = ['NAO', 'PLEFT', 'PRIGHT', 'GROUP']
-        labels_2 = ['INVOLVED', 'NOT_INVOLVED', 'NOT_INVOLVED', 'INVOLVED'] # involved
-        labels_3 = ['SINGLE', 'SINGLE', 'SINGLE', 'MANY'] # group
-        dict_label_addressee = dict(zip(labels_2, addressees))
-        eval_indexes = np.array([])
-        for name in class_names:
-            indexes = train_df[train_df['ADDRESSEE'] == dict_label_addressee[name]].index.to_numpy()
-            random.shuffle(indexes)
-            eval_indexes = np.concatenate((eval_indexes, indexes[0:tot_sequences]))
-        random.shuffle(eval_indexes)
-        for ind in eval_indexes:
-            eval_df = pd.concat([eval_df, train_df[train_df.index == ind]], ignore_index=True)
-            train_df = train_df.drop(train_df[train_df.index == ind].index)
-    else:
+    n_sequences = train_df['SEQUENCE'].max()
+    print(n_sequences)
+    sequence_list = list(range(1, n_sequences + 1))
+    random.shuffle(sequence_list)
+    eval_seq = np.array([])
 
-        n_sequences = train_df['SEQUENCE'].max()
-        print(n_sequences)
-        sequence_list = list(range(1, n_sequences + 1))
-        random.shuffle(sequence_list)
-        eval_seq = np.array([])
-
-        for name in class_names:
-            sequences = np.unique(train_df[train_df['ADDRESSEE'] == name]['SEQUENCE'].to_numpy())
-            random.shuffle(sequences)
-            eval_seq = np.concatenate((eval_seq, sequences[0:tot_sequences]))
-        random.shuffle(eval_seq)
-        for seq in eval_seq:
-            eval_df = pd.concat([eval_df, train_df[train_df['SEQUENCE'] == seq]], ignore_index=True)
-            train_df = train_df.drop(train_df[train_df['SEQUENCE'] == seq].index)
+    for name in class_names:
+        sequences = np.unique(train_df[train_df['ADDRESSEE'] == name]['SEQUENCE'].to_numpy())
+        random.shuffle(sequences)
+        eval_seq = np.concatenate((eval_seq, sequences[0:tot_sequences]))
+    random.shuffle(eval_seq)
+    for seq in eval_seq:
+        eval_df = pd.concat([eval_df, train_df[train_df['SEQUENCE'] == seq]], ignore_index=True)
+        train_df = train_df.drop(train_df[train_df['SEQUENCE'] == seq].index)
 
     eval_df.to_csv(os.path.join(data_dir, eval_filename), sep="\t", index_label='index')
     train_df.to_csv(os.path.join(data_dir, train_filename), sep="\t", index_label='index')
@@ -255,34 +231,7 @@ def get_transformations():
         ])
     }
 
-    data_transform_spect = {
-        'train': transforms.Compose([
-            transforms.ToPILImage(),
-            transforms.Resize((160, 160)),
-            #transforms.GaussianBlur(1, sigma=(0.1, 2.0)),
-            transforms.RandomInvert(p=0.2),
-            #transforms.RandomAdjustSharpness(2, 0.2),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
-        ]),
-        'eval': transforms.Compose([
-            transforms.ToPILImage(),
-            transforms.Resize((160, 160)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
-        ]),
-        'test': transforms.Compose([
-            transforms.ToPILImage(),
-            transforms.Resize((160, 160)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
-        ])
-    }
-
-    return data_transform_face, data_transform_pose, data_transform_spect
+    return data_transform_face, data_transform_pose
 
 
 def calculate_possible_shift(df, pose_path, sequence):
@@ -340,58 +289,6 @@ def translate_pose(pose, do_shift, left_max_shift, right_max_shift, last_shift):
         pose[k, :] = p
 
     return pose, last_shift
-
-def modify_df_for_audio(slot_df):
-
-    n_nao = slot_df[slot_df['LABEL'] == '0.0'].shape[0]
-
-    for i in slot_df.index.values:
-        if n_nao != 100:
-            if "flipped" in slot_df.loc[i, 'FACE_SPEAKER']:
-                # print(slot_df.loc[i, 'FACE_SPEAKER'])
-                slot_df = slot_df.drop([i])
-
-    if n_nao % 20 != 0:
-        n_nao = n_nao - 10
-
-    nao_df = slot_df[slot_df['LABEL'] == '0.0']
-    for n, i in enumerate(nao_df.index.values):
-
-        if n >= n_nao:
-            nao_df = nao_df.drop([i])
-        else:
-            nao_df.loc[i, 'LABEL'] == '0.0'
-            nao_df.loc[i, 'ADDRESSEE'] == 'INVOLVED'
-    #print('nao_df', nao_df)
-    left_df = slot_df[slot_df['LABEL'] == '1.0']
-    for n, i in enumerate(left_df.index.values):
-        if n >= n_nao / 2:
-            left_df = left_df.drop([i])
-        else:
-            left_df.loc[i, 'LABEL'] == '1.0'
-            left_df.loc[i, 'ADDRESSEE'] == 'NOT_INVOLVED'
-
-    right_df = slot_df[slot_df['LABEL'] == '2.0']
-    for n, i in enumerate(right_df.index.values):
-        if n >= n_nao / 2:
-            right_df = right_df.drop([i])
-        else:
-            right_df.loc[i, 'LABEL'] == '1.0'
-            right_df.loc[i, 'ADDRESSEE'] == 'NOT_INVOLVED'
-
-    frames = [nao_df, left_df, right_df]
-    concat_df = pd.concat(frames)
-
-    sequence_list = list(set((concat_df['SEQUENCE'].values)))
-    random.shuffle(sequence_list)
-    shuffled_df = pd.DataFrame(columns=concat_df.columns)
-    for seq in sequence_list:
-        shuffled_df = pd.concat([shuffled_df, concat_df[concat_df['SEQUENCE'] == seq]], ignore_index=True)
-
-    #print('shuffled_df', shuffled_df)
-    return shuffled_df
-
-
 
 def save(d, performances, models_list):
 

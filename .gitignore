@@ -1,0 +1,5 @@
+venv/
+models/
+results/
+labels/
+A_CREATE_DATASET/

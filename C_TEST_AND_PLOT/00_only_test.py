@@ -1,9 +1,7 @@
-from test import test_solo
-import pandas as pd
 import numpy as np
 import os
 import argparse
-
+from B_TRAIN.test import test_solo
 
 def read_args(args):
     a = {
@@ -24,7 +22,10 @@ def read_args(args):
 
 def save_results(a, d, error_df, intervals_check_df):
 
-    save_dir = os.path.join(a['save_results_dir'], a['model'], a['version'])
+    save_dir = os.path.join(a['save_results_dir'], a['model'])
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
+    save_dir = os.path.join(save_dir, a['version'])
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
     save_dir = os.path.join(save_dir, a['model_name'])
@@ -41,7 +42,7 @@ def main(args):
     a = read_args(args)
     a['slot_list'] = ['09', '10', '12', '15', '18', '19', '24', '26', '27', '30']
     a['model_path'] = os.path.join(a['model_path'], a['model'], a['version'])
-    a['labels_dir'] = os.path.join(a['labels_dir'], 'csv_{}'.format(a['version']))
+    #a['labels_dir'] = os.path.join(a['labels_dir'], 'csv_{}'.format(a['version']))
     models_list = [d for d in os.listdir(a['model_path']) if os.path.isdir(os.path.join(a['model_path'], d))]
     models_list.sort()
     print(a['model_path'])
@@ -60,18 +61,17 @@ def main(args):
         save_results(a, d, error_df, intervals_check_df)
 
 
-
 parser = argparse.ArgumentParser()
-parser.add_argument('--model_path', type=str, default='/home/icub/Documents/Carlo/models/FINALS')
+parser.add_argument('--model_path', type=str, default='/usr/local/src/robot/cognitiveinteraction/addressee_estimation_ijcnn23/models')
 parser.add_argument('--model', type=str, default='cnn_lstm_pose') #cnn_lstm_image #cnn_audio
-parser.add_argument('--version', type=str, default='v_21_nao_left_right_leakyrelu')
+parser.add_argument('--version', type=str, default='vTHESIS_50')
 parser.add_argument('--only_one', type=bool, default=False)
 parser.add_argument('--model_name', type=str, default='cnn_lstm_mm_9out_2022-11-20_16-29')
 parser.add_argument('--model_file', type=str, default='lstm_pose_info.npy')
-parser.add_argument('--test_filename', type=str, default='test_slot_30_out.csv')  #test_icub_1.csv
-parser.add_argument('--labels_dir', type=str, default='/home/icub/Documents/Carlo/dataset_labels_shuffled')
+parser.add_argument('--test_filename', type=str, default='')  #test_icub_1.csv
+parser.add_argument('--labels_dir', type=str, default='/usr/local/src/robot/cognitiveinteraction/addressee_estimation_ijcnn23/labels')
 parser.add_argument('--data_dir', type=str, default='/home/icub/Documents/Carlo/dataset_slots')
-parser.add_argument('--save_results_dir', type=str, default='/home/icub/Documents/Carlo/results')
+parser.add_argument('--save_results_dir', type=str, default='/usr/local/src/robot/cognitiveinteraction/addressee_estimation_ijcnn23/results')
 args = parser.parse_args()
 
 main(args)

@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import os
 
 np.random.seed(0)
@@ -92,26 +91,6 @@ def plot_confusion_matrix(d, performance_test):
 
     fig_dir = os.path.join(d['plot_dir'], '{}_conf_mtrx.png'.format(d['model_name']))
     plt.savefig(fig_dir)
-    plt.show()
-
-    return
-
-
-def plot_length_interval_impact(a, length, total, accuracy):
-
-    #all = sum(total)
-    #area1 = np.add(np.array(accuracy), np.array(total)/all*20)
-    #area2 = np.subtract(np.array(accuracy), np.array(total)/all*20)
-    plt.title("Impact of utterances' length")
-    ax = plt.gca()
-    ax.set_xlim([0, length[-1]*0.8])
-    ax.set_ylim([0, 100])
-    plt.xlabel("Utterance length (s)")
-    plt.ylabel("Accuracy (%)")
-    plt.plot(length*0.8, accuracy, linewidth=3, color="green")
-
-    print(os.path.join(a['results_dir'], 'length_impact.png'))
-    plt.savefig(os.path.join(a['results_dir'], 'length_impact.png'))
     plt.show()
 
     return

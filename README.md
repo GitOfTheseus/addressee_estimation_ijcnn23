@@ -2,9 +2,12 @@
 
 This repository holds the code used to train and test a Deep Learning model whose results are published in "To Whom are You Talking? A DL model to Endow Social Robots with Addressee Estimation Skills" at IJCNN 2023 Conference. 
 
-# Editing this README
+# Requirements
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Python 3.8.10 
+Libraries See file requirements.txt to set the virtual environment
+
+	
 
 ## Suggestions for a good README
 Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
