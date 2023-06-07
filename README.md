@@ -1,4 +1,4 @@
-# Name of the project
+# A Deep Learning Model for Addressee Estimation in Social Robots
 
 Addressee Estimation in multi-party Human-Robot Interaction
 
