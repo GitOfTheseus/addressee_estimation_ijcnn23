@@ -10,7 +10,7 @@ Please go to (DOI should yet be released) to read the paper.
 # Requirements
 
 Python Version 3.8.10 \
-Libraries --> See file requirements.txt to set the correct virtual environment	
+Libraries --> See file requirements_python3_8.txt to set the correct virtual environment	
 
 ## Description
 
@@ -37,6 +37,8 @@ Thanks to Marta Romeo (second author of the paper) for her support in designing 
 Creative Commons Attribution 4.0 International (CC-BY-4.0)
 https://joinup.ec.europa.eu/licence/creative-commons-attribution-40-international-cc-40
 
-For attribution, cite the paper (DOI released after the conference)
+For attribution, cite the paper:
+C. Mazzola, M. Romeo, F. Rea, A. Sciutti and A. Cangelosi, "To Whom are You Talking? A Deep Learning Model to Endow Social Robots with Addressee Estimation Skills," 2023 International Joint Conference on Neural Networks (IJCNN), Gold Coast, Australia, 2023, pp. 1-10, 
+https://doi.org/10.1109/IJCNN54540.2023.10191452
 
 ## Project status

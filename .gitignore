@@ -2,4 +2,8 @@ venv/
 models/
 results/
 labels/
-A_CREATE_DATASET/
+.idea
+.gitlab-ci.yml
+A_CREATE_DATASET/.idea
+B_TRAIN/__pycache__
+B_TRAIN/.idea
