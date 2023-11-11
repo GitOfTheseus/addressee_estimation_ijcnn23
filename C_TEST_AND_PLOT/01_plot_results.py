@@ -128,10 +128,8 @@ def create_icub_dataframe():
 
 def compute_confusion_matrix(d, df):
 
-
     confusion_matrix = np.zeros((len(d['labels']), len(d['labels'])))
     for i, l in enumerate(df['label']):
-
         confusion_matrix[int(df.loc[i, 'label']), int(df.loc[i, 'prediction'])] += 1
 
     return confusion_matrix
@@ -430,6 +428,7 @@ def compute_accuracy_incremental_duration(model_df):
             incremental_predictions_4 = predictions
             for p_4, prediction_4 in enumerate(incremental_predictions_4):
                 interval_results_4[prediction_4] = interval_results_4[prediction_4] + np.exp(scores[p_4])
+
             '''
             for p_4, prediction_4 in enumerate(incremental_predictions_4):
                 interval_results_4[prediction_4] = interval_results_4[prediction_4] + 1
@@ -443,7 +442,7 @@ def compute_accuracy_incremental_duration(model_df):
         if len(predictions) >= 3:
             incremental_predictions_3 = predictions[0:3]
             for p_3, prediction_3 in enumerate(incremental_predictions_3):
-                interval_results_3[prediction_3] = interval_results_3[prediction_3] +  + np.exp(scores[p_3])
+                interval_results_3[prediction_3] = interval_results_3[prediction_3] + np.exp(scores[p_3])
             '''
             for p_3, prediction_3 in enumerate(incremental_predictions_3):
                 interval_results_3[prediction_3] = interval_results_3[prediction_3] + 1
@@ -458,7 +457,7 @@ def compute_accuracy_incremental_duration(model_df):
 
             incremental_predictions_2 = predictions[0:2]
             for p_2, prediction_2 in enumerate(incremental_predictions_2):
-                interval_results_2[prediction_2] = interval_results_2[prediction_2] +  + np.exp(scores[p_2])
+                interval_results_2[prediction_2] = interval_results_2[prediction_2] + np.exp(scores[p_2])
             '''
             for p_2, prediction_2 in enumerate(incremental_predictions_2):
                 interval_results_2[prediction_2] = interval_results_2[prediction_2] + 1
@@ -559,11 +558,9 @@ def fill_dataframes(m, sequences_accuracy, sequences_performance, tot_intervals_
                     start_intervals_accuracy, start_intervals_performance, gradual_intervals_accuracies_list,
                     gradual_intervals_performances_list, incremental_intervals_accuracies_list,
                     incremental_intervals_performances_list):
-    print(sequences_accuracy)
     sequences_results.loc[m, 'accuracy'] = sequences_accuracy
     tot_intervals_results.loc[m, 'accuracy'] = tot_intervals_accuracy
     start_intervals_results.loc[m, 'accuracy'] = start_intervals_accuracy
-    print(sequences_results.loc[m, 'accuracy'])
     #print(sequences_accuracy, tot_intervals_accuracy, start_intervals_accuracy)
 
 
@@ -706,6 +703,7 @@ def main(args):
     read_variables()
 
     create_dataframes()
+
     for m, model in enumerate(d['models_list']):
         d['model_name'] = model
         model_df = pd.read_csv(os.path.join(d['results_dir'], d['model_name'], d['results_file']), sep='\t',
@@ -726,6 +724,7 @@ def main(args):
                         start_intervals_accuracy, start_intervals_performance, gradual_intervals_accuracies_list,
                         gradual_intervals_performances_list, incremental_intervals_accuracies_list,
                         incremental_intervals_performances_list)
+
 
     plot_results()
 
@@ -762,11 +761,11 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--results_path', type=str, default='/usr/local/src/robot/cognitiveinteraction/addressee_estimation_ijcnn23/results')
-    parser.add_argument('--model', type=str, default='cnn_lstm_pose')
-    parser.add_argument('--version', type=str, default='vTHESIS_50')
+    parser.add_argument('--model', type=str, default='cnn_lstm_mm')
+    parser.add_argument('--version', type=str, default='vTHESIS_50_512b')
     parser.add_argument('--results_file', type=str, default='results.csv')
     parser.add_argument('--sequence_duration', type=float, default=0.8)
-    parser.add_argument('--save_plot_dir', type=str, default='/home/icub/Documents/Carlo/THESIS/PLOTS')
+    parser.add_argument('--save_plot_dir', type=str, default='/home/icub/Documents/Carlo/THESIS/PLOTS_check')
 
     args = parser.parse_args()
 

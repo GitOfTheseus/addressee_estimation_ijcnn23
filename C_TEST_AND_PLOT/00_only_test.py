@@ -63,11 +63,11 @@ def main(args):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model_path', type=str, default='/usr/local/src/robot/cognitiveinteraction/addressee_estimation_ijcnn23/models')
-parser.add_argument('--model', type=str, default='cnn_lstm_pose') #cnn_lstm_image #cnn_audio
-parser.add_argument('--version', type=str, default='vTHESIS_50')
+parser.add_argument('--model', type=str, default='cnn_lstm_mm') #cnn_lstm_image #cnn_audio
+parser.add_argument('--version', type=str, default='vTHESIS_50_512b')
 parser.add_argument('--only_one', type=bool, default=False)
 parser.add_argument('--model_name', type=str, default='cnn_lstm_mm_9out_2022-11-20_16-29')
-parser.add_argument('--model_file', type=str, default='lstm_pose_info.npy')
+parser.add_argument('--model_file', type=str, default='lstm_vision_info.npy')
 parser.add_argument('--test_filename', type=str, default='')  #test_icub_1.csv
 parser.add_argument('--labels_dir', type=str, default='/usr/local/src/robot/cognitiveinteraction/addressee_estimation_ijcnn23/labels')
 parser.add_argument('--data_dir', type=str, default='/home/icub/Documents/Carlo/dataset_slots')

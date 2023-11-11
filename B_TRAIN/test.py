@@ -50,9 +50,10 @@ def test_vision(d, dataloader, cnn_image_d, cnn_pose_d, lstm_vision_d):
                                            pose_tensor, pose_tensor, pose_tensor, pose_tensor, pose_tensor), 1)
 
             output, current_batch = lstm_vision_d['model'](mm_tensor)
+            print("output", output)
             _, preds = torch.max(output, 1)
-            #for ii, pred in enumerate(preds):
-            #    print(pred, output[ii])
+            for ii, pred in enumerate(preds):
+                print(pred, output[ii])
 
             for ss, prediction in enumerate(preds):
                 score = output[ss, prediction]
