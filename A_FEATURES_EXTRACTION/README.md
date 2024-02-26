@@ -180,12 +180,12 @@ Python version & Requirements: Python 3.10, requirements_python10.txt
 
 
 ## Support
-If you need any support, please write an email to carlo.mazzola@iit.it
+If you need any support, please write an email to carlo.mazzola@iit.it https://orcid.org/0000-0002-9282-9873
 
 ## Authors and acknowledgment
 
 Author of the code:
-Carlo Mazzola
+Carlo Mazzola https://orcid.org/0000-0002-9282-9873
 
 Acknoweledgement:
 Thanks to Marta Romeo (second author of the paper) for her support in designing the architecture and in several steps of the development 
