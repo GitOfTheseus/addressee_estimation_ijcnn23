@@ -21,6 +21,10 @@ g.manual_seed(0)
 
 def data_loader_training(d, slot_folders, csv_training, test_filename):
 
+    # if you already have the label files for the ten-fold cross validation you can comment
+    # join_slot
+    # shuffle_dataset
+    # create_eval_group
     join_slot(model=d['model'], data_dir=d['data_dir'], label_filename=d['label_filename'],
              slot_test=d['slot_test'], slot_folders=slot_folders, train_filename=csv_training[0],
               test_filename=test_filename, training_complete=d['training_complete'])

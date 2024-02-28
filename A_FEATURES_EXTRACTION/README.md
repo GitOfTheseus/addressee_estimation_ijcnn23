@@ -6,6 +6,8 @@ The entire has to be followed for each interaction contained in the Vernissage C
 Each file is a step of the data pipeline.
 ! Althought auditory features have been extracted, they have not been exploited to train the Addressee Estimation model, which (at the moment) only exploit visual information.
 
+In https://doi.org/10.5281/zenodo.10711588 you can find data connected with this code. Among them, label files that are created with the following files and that contains temporal information about when frames, faces and pose were captured, cropped and extracted from the original naovideo.avi contained in each slot of the vernissage corpus. Thus, in order to obtain the dataset of this project from the vernissage corpus, instead of running all the following codes, it is possible to use these label files, capture frames with the temporal information provided in the .csv file and then crop faces and extract poses as explained in # 03_dataset_poses.py and # 04_get_face_from_pose.py. On the other hand, if you want to follow the exact pipeline that has been followed in this study you can go trough the following:  
+
 # 00_temporal_alignment.py
 
 Brief description:
@@ -35,6 +37,8 @@ It gives as output:
 - clips trimmed from the original raw data file. The most important are "{}videomerged{}.mp4", which contains both audio and video info merged.
 
 Python version & Requirements: Python 3.10, requirements_python10.txt
+
+!! between pre_checking and post_checking, as you can imaging there has been a checking phase. Manual annotation can be hard, and often some errors can occurs. Therefore, to clean further the dataset we have removed clips wrong or that could not be used (i.e., that were shorter than 0.8 s, that showed errors in the annotation such as who was the speaker, or in which nobody was actually talking). We are sorry for this interruption of the automatism in the creation of the dataset, but it was needed to prevent training our model on wrong data.
 
 # 02_creation_dataset_post_checking.py
 
@@ -74,21 +78,6 @@ It gives as output:
 - .csv files 
 
 Python version & Requirements: Python 3.6, requirements_python6.txt
-
-# 03_dataset_poses.py
-
-Brief description:
-This codes computes and extract body pose joints of people in video frames saved by "02_creation_dataset_post_checking.py". Body joints are extracted and saved both for the speaker and the other person present in the image. OpenPose algorithm is emplyed for the pose computation https://github.com/CMU-Perceptual-Computing-Lab/openpose (Coco version) 
-
-It takes in input: 
-- .jpg frames saved by '02_creation_dataset_post_checking.py'
-- .csv video label file created by  '02_creation_dataset_post_checking.py
-
-It gives as output:
-- .npy files with info of the body pose joints for the speaker and the other
-- .csv files 
-
-Python version & Requirements: Python 3.10, requirements_python10.txt
 
 # 04_get_face_from_pose.py
 
@@ -137,7 +126,8 @@ Python version & Requirements: Python 3.10, requirements_python10.txt
 # 07_merging_dataset.py
 
 Brief description:
-This codes creates the final dataset with the files structured correctly to allow the training of the model.
+This codes creates the final dataset with the files structured correctly to allow the training of the model. This code copies the .jpg files of the speaker's face and the .npy files of the speaker's pose into the emtpy structure of folders /dataset_slots that you can find in https://zenodo.org/doi/10.5281/zenodo.10711587  
+The ten empty subfolders of /dataset_slots represent the ten slots of the Vernissage Corpus. Within them, data will be copied in two new subfolders: .jpg in /face_s and .npy in /pose_s 
 
 It takes in input: 
 

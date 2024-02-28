@@ -16,12 +16,12 @@ def main(args):
 
     d = read_arguments(args)
 
-    if not d['training_complete']:
+    if not d['training_complete']:  # if the training is not complete for all the slots but you are following the 10-fold cross validation approach
 
-        if d['all_slots_training']:
+        if d['all_slots_training']: # if you want to train 10 models one after the other, leaving out every time a different slot for the testing
             slot_test_list = range(10)
         else:
-            slot_test_list = [d['slot_test']]
+            slot_test_list = [d['slot_test']] # if you want to train only one model on nine slots, leaving out one specific slot (d['slot_test']
 
         for slot_test in slot_test_list:
             d['slot_test'] = slot_test
@@ -56,16 +56,25 @@ if __name__ == "__main__":
     # cnn_lstm_mm_latefusion: late fusion face+pose;
     # cnn_lstm_image: only face;
     # cnn_lstm_pose: only pose;
+
+    parser.add_argument('--label_filename', type=str, default='lstm_label_3_classes.csv')
+    # the label filename resulting from the A_FEATURES_EXTRACTION codes.
+    # But if you already have the final label files for the 10 folds cross validation you don't need this: go in loaders.data_loader_training and comment
+    # join_slot
+    # shuffle_dataset
+    # create_eval_group
+
     parser.add_argument('--data_dir', type=str, default='[your directory]/dataset_slots')
-    parser.add_argument('--label_filename', type=str, default='lstm_label_no_doubles_augmented_nogroup_3.csv')
     #options
     # 3classes 'lstm_label_no_doubles_augmented_nogroup_3.csv'
     # binary 'lstm_label_no_doubles_involved.csv'
+
     parser.add_argument('--models_dir', type=str, default='[your directory]/models')
     parser.add_argument('--class_names', type=list, default=['NAO', 'PLEFT', 'PRIGHT'])
     # options
     # 3classes ['NAO', 'PLEFT', 'PRIGHT']
     # binary ['INVOLVED', 'NOT_INVOLVED']
+
     parser.add_argument('--solo_audio', type=bool, default=False)
     parser.add_argument('--all_slots_training', type=bool, default=True)
     parser.add_argument('--slot_test', type=int, default=0)
@@ -83,6 +92,7 @@ if __name__ == "__main__":
     # SGD_opt 
     # RMSprop_opt 
     # Adam_opt
+    
     parser.add_argument('--dict_dir', type=str, default='')
     parser.add_argument('--training_complete', type=bool, default=False)
 
