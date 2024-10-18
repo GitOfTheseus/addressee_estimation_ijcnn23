@@ -2,8 +2,5 @@ venv/
 models/
 results/
 labels/
-.idea
 .gitlab-ci.yml
-B_TRAIN/__pycache__
-B_TRAIN/.idea
-C_TEST_AND_PLOT/__pycache__
+
